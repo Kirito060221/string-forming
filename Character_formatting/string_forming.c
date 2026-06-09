@@ -28,7 +28,7 @@ int main()
     }
     printf("\n\n");
     while (fgets(line_buf, BUFSIZE, fp) != NULL) {
-        char* word = strtok(line_buf, " \n");
+        char* word = strtok(line_buf, " \t\r\n"); //タブや改行にも対応
         while (word != NULL) {
             if (strlen(word) > line_len) {
                 printf("\n文中の単語%sが%dを超えています", word, line_len);
