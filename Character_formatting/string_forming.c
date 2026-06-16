@@ -45,7 +45,7 @@ int main()
                 printf("%s ", word);
                 current_len = current_len + strlen(word) + 1;
             }
-            word = strtok(NULL, " \n"); // 2個目以降はNULL（残りが自動的に指定）
+            word = strtok(NULL, " \t\r\n"); // 2個目以降はNULL（残りが自動的に指定）
         }
     }
     printf("\n\n");
