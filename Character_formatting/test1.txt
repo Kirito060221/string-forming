@@ -1,1 +1,1 @@
-WordA /break/ /break/ WordB /space/ /space/ WordC /par/ /par/ WordD
+FirstParagraph /break/ This is a new line. /space/ This is after space. /par/ SecondParagraph
