@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #define BUFSIZE 1024 // 文字型配列に格納できる文字の最大数
-void handle_special_command(char word[], int* current_len, FILE* fp);
+int handle_special_command(char word[], int* current_len, FILE* fp);
 int main()
 {
     FILE* fp;
@@ -34,17 +34,19 @@ int main()
                 printf("\n文中の単語%sが%dを超えています(%d文字)", word, line_len, strlen(word));
                 return -1;
             } else if (word[0] == '/' && word[strlen(word) - 1] == '/') {
-                handle_special_command(word, &current_len, fp); // 特殊文字対応関数の呼び出し
-            } else {
-                // 「１行につき現在表示した文字（＋スペース）数」＋取得した単語の文字数を見る
-                if (strlen(word) + current_len > line_len) {
-                    printf("\n");
-                    current_len = 0;
+                if(handle_special_command(word, &current_len, fp) == 1) {
+                    word = strtok(NULL, " \t\r\n"); 
+                    continue;
                 }
-                // 単語を表示し、「１行につき現在表示した文字数」に単語の文字数＋１（スペース分）足す
-                printf("%s ", word);
-                current_len = current_len + strlen(word) + 1;
             }
+            // 「１行につき現在表示した文字（＋スペース）数」＋取得した単語の文字数を見る
+            if (strlen(word) + current_len > line_len) {
+                printf("\n");
+                current_len = 0;
+            }
+            // 単語を表示し、「１行につき現在表示した文字数」に単語の文字数＋１（スペース分）足す
+            printf("%s ", word);
+            current_len = current_len + strlen(word) + 1;
             word = strtok(NULL, " \t\r\n"); // 2個目以降はNULL（残りが自動的に指定）
         }
     }
@@ -59,17 +61,21 @@ int main()
 }
 
 // 特殊文字への対応
-void handle_special_command(char word[], int* current_len, FILE* fp)
+int handle_special_command(char word[], int* current_len, FILE* fp)
 {
     if (strcmp(word, "/par/") == 0) { // 特殊文字/par/：段落の作成、１行空け６文字分スペースを空ける
         printf("\n\n      ");
         *current_len = 6;
+        return 1;
     } else if (strcmp(word, "/break/") == 0) { // 特殊文字/break/：改行
         printf("\n");
         *current_len = 0;
+        return 1;
     } else if (strcmp(word, "/space/") == 0) { // 特殊文字/space/：改行し、さらに１行分空ける
         printf("\n\n");
         *current_len = 0;
+        return 1;
     }
-    return;
+
+    return 0;
 }
